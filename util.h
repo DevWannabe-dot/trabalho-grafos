@@ -9,12 +9,19 @@
 #ifndef __UTIL_h__
 #define __UTIL_h__
 
+// Inclusões
 #include <stdio.h>
 #include <string.h>
 #include "util.h"
 
+// Constantes
+#define TAM_MAX_NOME    (100+1)
 
 // Tipos
+typedef struct herois_s {
+    char nome[TAM_MAX_NOME];
+    bool visitado;
+} herois_t;
 
 // Funcoes
 void imprimirCadeiaDeCaracter(char caracter, int N) {

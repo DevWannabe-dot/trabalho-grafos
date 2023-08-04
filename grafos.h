@@ -30,7 +30,7 @@
 // Tipos
 typedef struct grafo_s {
     int nVertices;
-    int* verticesVisitados;
+    herois_t* herois;
     Lista** listasAdjacencia; // array de listas de adjacência
 } grafo_t;
 
@@ -39,8 +39,8 @@ grafo_t* grafo_cria(int nVertices) {
     grafo_t* G = (grafo_t*)malloc(sizeof(grafo_t));
 
     G->nVertices = nVertices;
+    G->herois = (herois_t*)calloc(sizeof(herois_t), nVertices);
     G->listasAdjacencia = (Lista**)malloc(sizeof(Lista*) * nVertices);
-    G->verticesVisitados = (int*)calloc(sizeof(int), nVertices);
 
     for (int i = 0; i < nVertices; i++) {
         G->listasAdjacencia[i] = NULL;
@@ -65,13 +65,14 @@ void grafo_DFS_LST(grafo_t G, int vertice) {
     Lista* listaAdjacencia = G.listasAdjacencia[vertice];
     Lista* temp = listaAdjacencia;
 
-    G.verticesVisitados[vertice] = 1;
-    printf("Percorrido vertice %d\n", vertice);
+    G.herois[vertice].visitado = 1;
+    // printf("Percorrido vertice %d\n", vertice);
+    puts(G.herois[vertice].nome);
 
     for (temp; temp != NULL; temp = temp->prox) {
         int verticeAtual = temp->info;
 
-        if (G.verticesVisitados[verticeAtual] == 0) {
+        if (G.herois[verticeAtual].visitado == 0) {
             grafo_DFS_LST(G, verticeAtual);
         }
     }

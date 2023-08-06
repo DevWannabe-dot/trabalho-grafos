@@ -13,15 +13,20 @@ batalha e derrotar o grande inimigo. */
 // Inclusões
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdbool.h>
+#include <locale.h>
+#include <ctype.h>
 #include "util.h"
+#include "listas.h"
 #include "fila.h"
 #include "pilhas.h"
 #include "grafos.h"
 
 // Constantes
-#define SUCESSO         (0)
-#define VALOR_TESTE     (5)
+#define SUCESSO                 (0)
+#define NUMERO_TRACINHOS        (30)
+#define TAM_MAX_STRING_GENERICO (20+1)
 
 // Tipos
 
@@ -29,31 +34,77 @@ batalha e derrotar o grande inimigo. */
 void encontrarGrupos(grafo_t* G) {
     for (int i = 0; i < (*G).nVertices; i++) {
         if (!G->herois[i].visitado) {
-            printf("Grupo: ");
-            grafo_DFS_LST(*G, i);
+            grafo_DFS_LST(*G, i); // passado uma cópia dos valores do grafo, uma vez que o único membro a ser modificado é herois_t* herois
             puts("");
         }
     }
 }
 
+int main(int argc, char** argv) {
+    grafo_t* grafo = NULL;
+    int nHerois = 0, i, op, h1, h2;
+    FILE* lista_herois = fopen("herois.txt", "r");
+    char lixo;
+    char aux[TAM_MAX_STRING_GENERICO];
 
-int main() {
-    grafo_t* grafo = grafo_cria(VALOR_TESTE); // uso de ponteiro para permitir, na interação com usuário, criar vários "multiversos"?
+    // Acentuação em português
+    setlocale(LC_CTYPE, "Portuguese");
 
-    strcpy(grafo[0].herois[0].nome, "Batman");
-    strcpy(grafo[0].herois[1].nome, "Superman");
-    strcpy(grafo[0].herois[2].nome, "Homem de ferro");
-    strcpy(grafo[0].herois[3].nome, "Aquaman");
-    strcpy(grafo[0].herois[4].nome, "Viuva Negra");
+    // Lê do arquivo os heróis
+    if (lista_herois) {
+        while (!feof(lista_herois)) {
+            grafo = grafo_cria(nHerois);
 
-    // Herois da DC
-    grafo_adicionaAresta(grafo, 0, 1);
-    grafo_adicionaAresta(grafo, 0, 3);
-    grafo_adicionaAresta(grafo, 1, 3);
-    // Herois da Marvel
-    grafo_adicionaAresta(grafo, 2, 4);
+            fgets(aux, TAM_MAX_NOME, lista_herois);
+            if (!isupper((int)aux[3 - 1])) {
+                strcpy(HEROIS_DADOS(grafo->herois, nHerois), aux);
+                removeQuebraLinhaFinal(HEROIS_DADOS(grafo->herois, i));
+            }
+            nHerois++;
+        }
+    } else {
+        printf("Erro ao abrir a lista de herois\n");
+        return 1;
+    }
 
-    encontrarGrupos(&grafo[0]);
+    // Imprimir menu
+    do {
+        imprimirCadeiaDeCaracter('-', NUMERO_TRACINHOS);
+        printf("\n(0) Finalizar e ver grupos\n(1) Nova relação entre dois heróis\n(2) Ver lista de heróis\n>> ");
+        scanf("%i%c", &op, &lixo);
+        imprimirCadeiaDeCaracter('-', NUMERO_TRACINHOS);
+        puts("");
+
+        switch (op) {
+        case 0:
+            encontrarGrupos(grafo);
+            break;
+        case 1:
+            printf("Indique os dois heróis a partir de seus respectivos números na lista\nPrimeiro: ");
+            scanf("%i%c", &h1, &lixo);
+            printf("Segundo: ");
+            scanf("%i%c", &h2, &lixo);
+            grafo_adicionaAresta(grafo, h1, h2);
+            break;
+        case 2:
+            for (i = 0; i < nHerois; i++) {
+                printf("%i\t%s\n", i, HEROIS_DADOS(grafo->herois, i));
+            }
+            break;
+        default:
+            fprintf(stderr, "OPCAO INVALIDA\n");
+            break;
+        }
+    } while (op);
+
+    // Liberar ponteiros e fechar arquivos
+    for (int i = 0; i < GRAFO_UNICO(grafo).nVertices; i++) {
+        free(GRAFO_UNICO(grafo).listasAdjacencia[i]);
+    }
+    free(GRAFO_UNICO(grafo).listasAdjacencia);
+    free(GRAFO_UNICO(grafo).herois);
+    free(grafo);
+    fclose(lista_herois);
 
     return 0;
 }

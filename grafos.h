@@ -1,7 +1,7 @@
 /**
 * @file     grafos.h
 * @brief    Biblioteca de grafos, funções e macros
-* @author   Bruna Santarelli, Marco Túlio Oliveira, Matheus Telles, Pedro Henrique
+* @author   Bruna Santarelli, Marco Túlio Oliveira, Matheus Telles, Pedro Henrique, Vírginia Fernandes Mota
 * @date     2023-07-02
 */
 
@@ -27,7 +27,15 @@
 #define CINZA 1
 #define PRETO 2
 
+#define HEROIS_DADOS(x, y)  ((char*)(x[y].nome))
+#define GRAFO_UNICO(x)      (x[0])
+
 // Tipos
+typedef struct herois_s {
+    char nome[TAM_MAX_NOME];
+    bool visitado;
+} herois_t;
+
 typedef struct grafo_s {
     int nVertices;
     herois_t* herois;
@@ -66,12 +74,12 @@ void grafo_DFS_LST(grafo_t G, int vertice) {
     Lista* temp = listaAdjacencia;
 
     G.herois[vertice].visitado = 1;
-    // printf("Percorrido vertice %d\n", vertice);
-    puts(G.herois[vertice].nome);
 
+    if(temp && (G.listasAdjacencia[vertice])) printf("Grupo: ");
     for (temp; temp != NULL; temp = temp->prox) {
         int verticeAtual = temp->info;
 
+        puts(G.herois[verticeAtual].nome);
         if (G.herois[verticeAtual].visitado == 0) {
             grafo_DFS_LST(G, verticeAtual);
         }

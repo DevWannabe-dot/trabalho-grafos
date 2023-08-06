@@ -18,10 +18,6 @@
 #define TAM_MAX_NOME    (100+1)
 
 // Tipos
-typedef struct herois_s {
-    char nome[TAM_MAX_NOME];
-    bool visitado;
-} herois_t;
 
 // Funcoes
 void imprimirCadeiaDeCaracter(char caracter, int N) {

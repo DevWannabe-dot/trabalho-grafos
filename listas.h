@@ -1,7 +1,7 @@
 /**
 * @file     listas.h
-* @brief    Biblioteca de listas pela profa. Dra. Virg�nia Mota
-* @author   Virg�nia Fernandes Mota
+* @brief    Biblioteca de listas pela profa. Dra. Virgínia Mota
+* @author   Virgínia Fernandes Mota
 * @date     2023-03-10
 */
 
@@ -58,7 +58,7 @@ Lista* lista_busca(Lista* l, int v) {
 		}
 	}
 
-	printf("Elemento n�o encontrado\n");
+	printf("Elemento não encontrado\n");
 
 	return NULL;
 }
@@ -73,7 +73,7 @@ Lista* lista_retira(Lista* l, int v) {
 	}
 
 	if (p == NULL) {
-		printf("Elemento não encontrado\n");
+		printf("Elemento nÃ£o encontrado\n");
 		return l;
 	}
 

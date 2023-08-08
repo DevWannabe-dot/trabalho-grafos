@@ -1,7 +1,7 @@
 /**
 * @file     filas.h
-* @brief    Biblioteca de filas pela profa. Dra. Virgínia Mota
-* @author   Virgínia Fernandes Mota
+* @brief    Biblioteca de filas pela profa. Dra. VirgÃ­nia Mota
+* @author   VirgÃ­nia Fernandes Mota
 * @date     2023-01-26
 */
 
@@ -125,7 +125,7 @@ Lista* fila_busca_l(FilaL* fila, int informacao) {
 	return NULL;
 }
 
-// Funções de impressão
+// FunÃ§Ãµes de impressÃ£o
 
 void fila_imprime_vet(Fila* f) {
 	int i;

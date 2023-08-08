@@ -1,7 +1,7 @@
 /**
 * @file     pilhas.h
-* @brief    Biblioteca de pilhas pela profa. Dra. Virgínia Mota
-* @author   Virgínia Fernandes Mota
+* @brief    Biblioteca de pilhas pela profa. Dra. VirgÃ­nia Mota
+* @author   VirgÃ­nia Fernandes Mota
 * @date     2023-01-26
 */
 

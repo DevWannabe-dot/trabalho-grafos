@@ -1,16 +1,16 @@
 /**
 * @file     main.c
 * @brief    Arquivo principal do programa
-* @author   Bruna Santarelli, Marco T˙lio Oliveira, Matheus Telles, Pedro Henrique
+* @author   Bruna Santarelli, Marco T√∫lio Oliveira, Matheus Telles, Pedro Henrique
 * @date     2023-07-02
 */
 
-/* Proposta: Todos os herÛis da Marvel e da DC, ou pelo menos grande parte deles, resolveram se juntar contra um grande vil„o para dar uma forcinha e fazer
-um crossover divertido. PorÈm isso acabou gerando um problema grave pois n„o sabemos mais quem luta com quem! V·rios herÛis conversam entre si, enquanto
-outros s„o completamente desconexos, o que pode atrapalhar a luta. O seu papel È encontrar quais s„o os grupos mais coesos para formarem essa frente de
+/* Proposta: Todos os her√≥is da Marvel e da DC, ou pelo menos grande parte deles, resolveram se juntar contra um grande vil√£o para dar uma forcinha e fazer
+um crossover divertido. Por√©m isso acabou gerando um problema grave pois n√£o sabemos mais quem luta com quem! V√°rios her√≥is conversam entre si, enquanto
+outros s√£o completamente desconexos, o que pode atrapalhar a luta. O seu papel √© encontrar quais s√£o os grupos mais coesos para formarem essa frente de
 batalha e derrotar o grande inimigo. */
 
-// Inclusıes
+// Inclus√µes
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,41 +26,51 @@ batalha e derrotar o grande inimigo. */
 // Constantes
 #define SUCESSO                 (0)
 #define NUMERO_TRACINHOS        (30)
-#define TAM_MAX_STRING_GENERICO (20+1)
+#define TAM_MAX_STRING_GENERICO (40+1)
+#define N_GRUPOS_HEROIS         (7)
 
 // Tipos
+typedef struct grupos_herois_s {
+    char nome[TAM_MAX_STRING_GENERICO];
+    bool ehDaMarvel;
+} grupos_t;
 
-// FunÁıes
+// Fun√ß√µes
 void encontrarGrupos(grafo_t* G) {
     for (int i = 0; i < (*G).nVertices; i++) {
+        int jaFoiImpresso = 0; // indica se um grupo est√° no processo de impress√£o (evitando a pr√°tica de vari√°vel global)
         if (!G->herois[i].visitado) {
-            grafo_DFS_LST(*G, i); // passado uma cÛpia dos valores do grafo, uma vez que o ˙nico membro a ser modificado È herois_t* herois
-            puts("");
+            grafo_DFS_LST(*G, i, jaFoiImpresso); // passado uma c√≥pia dos valores do grafo, uma vez que o √∫nico membro a ser modificado √© herois_t* herois
         }
     }
 }
 
 int main(int argc, char** argv) {
     grafo_t* grafo = NULL;
-    int nHerois = 0, i, op, h1, h2;
+    int nHerois = 0, op, h1, h2, nGruposHerois = 0;
     FILE* lista_herois = fopen("herois.txt", "r");
-    char lixo;
-    char aux[TAM_MAX_STRING_GENERICO];
+    char lixo, aux[TAM_MAX_STRING_GENERICO];
 
-    // AcentuaÁ„o em portuguÍs
+    // Acentua√ß√£o em portugu√™s (PODE CRASHAR NO CMD)
     setlocale(LC_CTYPE, "Portuguese");
 
-    // LÍ do arquivo os herÛis
+    // L√™ do arquivo os her√≥is
     if (lista_herois) {
-        while (!feof(lista_herois)) {
-            grafo = grafo_cria(nHerois);
+        for (char c = getc(lista_herois); c != EOF; c = getc(lista_herois)) {
+            if (c == '\n') nHerois++;
+        }
 
-            fgets(aux, TAM_MAX_NOME, lista_herois);
-            if (!isupper((int)aux[3 - 1])) {
-                strcpy(HEROIS_DADOS(grafo->herois, nHerois), aux);
-                removeQuebraLinhaFinal(HEROIS_DADOS(grafo->herois, i));
+        grafo = grafo_cria(nHerois);
+
+        int i = 0;
+        fseek(lista_herois, 0, SEEK_SET);
+        while (!feof(lista_herois)) {
+            fgets(aux, TAM_MAX_STRING_GENERICO, lista_herois);
+            if (strcmp(aux, "---DC---") != 0) {
+                strcpy(HEROIS_DADOS(grafo->herois, i), aux);
             }
-            nHerois++;
+            removeQuebraLinhaFinal(HEROIS_DADOS(grafo->herois, i));
+            i++;
         }
     } else {
         printf("Erro ao abrir a lista de herois\n");
@@ -70,7 +80,7 @@ int main(int argc, char** argv) {
     // Imprimir menu
     do {
         imprimirCadeiaDeCaracter('-', NUMERO_TRACINHOS);
-        printf("\n(0) Finalizar e ver grupos\n(1) Nova relaÁ„o entre dois herÛis\n(2) Ver lista de herÛis\n>> ");
+        printf("\n(0) Finalizar e ver grupos\n(1) Nova rela√ß√£o entre dois her√≥is\n(2) Ver lista de her√≥is\n>> ");
         scanf("%i%c", &op, &lixo);
         imprimirCadeiaDeCaracter('-', NUMERO_TRACINHOS);
         puts("");
@@ -80,14 +90,16 @@ int main(int argc, char** argv) {
             encontrarGrupos(grafo);
             break;
         case 1:
-            printf("Indique os dois herÛis a partir de seus respectivos n˙meros na lista\nPrimeiro: ");
+            printf("Indique os dois her√≥is a partir de seus respectivos n√∫meros na lista\nPrimeiro: ");
             scanf("%i%c", &h1, &lixo);
             printf("Segundo: ");
             scanf("%i%c", &h2, &lixo);
             grafo_adicionaAresta(grafo, h1, h2);
             break;
         case 2:
-            for (i = 0; i < nHerois; i++) {
+            printf("Herois da Marvel: \n");
+            for (int i = 0; i < nHerois; i++) {
+                if (i == 25) printf("\n\nHerois da DC: \n");
                 printf("%i\t%s\n", i, HEROIS_DADOS(grafo->herois, i));
             }
             break;
@@ -97,8 +109,8 @@ int main(int argc, char** argv) {
         }
     } while (op);
 
-    // Liberar ponteiros e fechar arquivos
-    for (int i = 0; i < GRAFO_UNICO(grafo).nVertices; i++) {
+    // Liberar ponteiros e fechar arquivos (PODE CRASHAR NO VISUAL STUDIO)
+    for (int i = 1; i < GRAFO_UNICO(grafo).nVertices; i++) {
         free(GRAFO_UNICO(grafo).listasAdjacencia[i]);
     }
     free(GRAFO_UNICO(grafo).listasAdjacencia);

@@ -1,7 +1,7 @@
 /**
 * @file     grafos.h
-* @brief    Biblioteca de grafos, funÁıes e macros
-* @author   Bruna Santarelli, Marco T˙lio Oliveira, Matheus Telles, Pedro Henrique, VÌrginia Fernandes Mota
+* @brief    Biblioteca de grafos, fun√ß√µes e macros
+* @author   Bruna Santarelli, Marco T√∫lio Oliveira, Matheus Telles, Pedro Henrique, V√≠rginia Fernandes Mota
 * @date     2023-07-02
 */
 
@@ -39,7 +39,7 @@ typedef struct herois_s {
 typedef struct grafo_s {
     int nVertices;
     herois_t* herois;
-    Lista** listasAdjacencia; // array de listas de adjacÍncia
+    Lista** listasAdjacencia; // array de listas de adjac√™ncia
 } grafo_t;
 
 // Funcoes
@@ -69,21 +69,22 @@ void grafo_adicionaAresta(grafo_t* G, int ini, int fim) {
     G->listasAdjacencia[fim] = novaLista;
 }
 
-void grafo_DFS_LST(grafo_t G, int vertice) {
+void grafo_DFS_LST(grafo_t G, int vertice, int jaFoiImpresso) {
     Lista* listaAdjacencia = G.listasAdjacencia[vertice];
     Lista* temp = listaAdjacencia;
 
     G.herois[vertice].visitado = 1;
 
-    if(temp && (G.listasAdjacencia[vertice])) printf("Grupo: ");
     for (temp; temp != NULL; temp = temp->prox) {
         int verticeAtual = temp->info;
 
-        puts(G.herois[verticeAtual].nome);
+        printf("%s", (jaFoiImpresso ? "": "Grupo: "));
+        if (puts(G.herois[verticeAtual].nome) != EOF) jaFoiImpresso = 1;
         if (G.herois[verticeAtual].visitado == 0) {
-            grafo_DFS_LST(G, verticeAtual);
+            grafo_DFS_LST(G, verticeAtual, jaFoiImpresso);
         }
     }
+    jaFoiImpresso = 0;
 }
 
 
@@ -131,7 +132,7 @@ void grafo_BFS_LST(Lista** grafo_l, int source, int quant_vert) {
         cor[vertice] = PRETO;
     }
 
-    printf(" VÈrtice | Antecessor  | Dist‚ncia\n");
+    printf(" V√©rtice | Antecessor  | Dist√¢ncia\n");
     for (i = 0; i < quant_vert; i++) {
         if (origem[i] != N_EXISTE) {
             printf(" %d\t | %d\t       | %d\n", i, origem[i], distancia[i]);

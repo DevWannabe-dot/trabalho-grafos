@@ -1,6 +1,6 @@
 /**
 * @file     util.h
-* @brief    Biblioteca com funções auxiliares
+* @brief    Biblioteca com funÃ§Ãµes auxiliares
 * @author   Pedro Henrique
 * @date     2023-01-26
 */
@@ -9,7 +9,7 @@
 #ifndef __UTIL_h__
 #define __UTIL_h__
 
-// Inclusões
+// InclusÃµes
 #include <stdio.h>
 #include <string.h>
 #include "util.h"
